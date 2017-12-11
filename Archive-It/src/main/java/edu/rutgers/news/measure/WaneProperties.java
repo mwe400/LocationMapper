@@ -51,6 +51,7 @@ public class WaneProperties {
 	
 	private static final String BASE_COMMUNITY_FILE = "communityExcelFile";
 	private static final String WANE_DOWNLOADED_MANUALLY = "manuallyDownloadWaneFlag";
+	private static final String WANE_AUTH_URL = "waneAuthurl";
 	
 	protected PrintStream errStream = System.err;
 	protected Properties settings;
@@ -349,6 +350,14 @@ public class WaneProperties {
 
 	public boolean isDownloadedManually() {
 		return Constants.yes.equalsIgnoreCase(settings.getProperty(WANE_DOWNLOADED_MANUALLY)) ? true : false;
+	}
+
+	public String getWaneAuthURL() {
+		return settings.getProperty(WANE_AUTH_URL) == null ? Constants.blank : settings.getProperty(WANE_AUTH_URL);
+	}
+
+	public void overrideAuthURL() {
+		settings.setProperty(AUTH_URL_PARAM_NAME, getWaneAuthURL());
 	}
 
 }

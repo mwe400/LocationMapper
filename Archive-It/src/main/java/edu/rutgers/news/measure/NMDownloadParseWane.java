@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.validator.routines.IntegerValidator;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -63,6 +64,8 @@ public class NMDownloadParseWane {
 	private static final char SEP = File.separatorChar;
 
 	private WasapiConnection wasapiConn;
+	
+	private int unauthorizedAccessAttempt = 0;
 
 	// Contains the final data, Key - Date, Value - Location Frequency data
 	// corresponding to each County
@@ -174,7 +177,13 @@ public class NMDownloadParseWane {
 						+ ") downloading file (will not retry): ";
 				System.err.println(prefix + file.getLocations()[0]);
 				System.err.println(" HTTP ResponseCode was " + e.getStatusCode());
-				attempts = numRetries + 1; // no more attempts
+				if(unauthorizedAccessAttempt == 0 && e.getStatusCode() == HttpStatus.SC_UNAUTHORIZED 
+						&& !Constants.blank.equals(settings.getWaneAuthURL())) {
+					settings.overrideAuthURL();
+					wasapiConn = null;
+				} else {
+					attempts = numRetries + 1; // no more attempts
+				}
 			} catch (ClientProtocolException e) {
 				String prefix = "ERROR: ClientProtocolException (" + e.getMessage()
 						+ ") downloading file (will not retry): ";
