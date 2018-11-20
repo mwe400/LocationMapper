@@ -55,7 +55,7 @@ FinalData$State <- trimws(geo1$State)
 #Defining geocode function with the API-KEY
 getGeoData <- function(location) {
   location <- gsub(' ','+',location)
-  geo_data <- getURL(paste("https://maps.googleapis.com/maps/api/geocode/json?address=",location,"&key=AIzaSyA6FvTYYJ8vPdSse9ElrLWUeQa9pXJAC7o", sep=""))
+  geo_data <- getURL(paste("https://maps.googleapis.com/maps/api/geocode/json?address=",location,"&key=APIKEY", sep=""))
   #geo_data <- getURL(paste("https://maps.googleapis.com/maps/api/geocode/json?address=",location,sep=""))
   raw_data_2 <- fromJSON(geo_data)
   return(raw_data_2)
